@@ -1,14 +1,24 @@
 package org.example;
 
+import java.io.IOException;
 import org.example.library.LibTerminalRawMode;
-import org.example.model.cnative.Termios;
+import org.example.service.TerminalRawModeService;
 
 public class TextEditor {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
 
-    LibTerminalRawMode terminalRawMode = LibTerminalRawMode.newInstance();
-    Termios termiosP = new Termios();
-    terminalRawMode.tcgetattr(LibTerminalRawMode.SYSTEM_OUT_FD, termiosP);
+    TerminalRawModeService terminalRawModeService =
+        new TerminalRawModeService(LibTerminalRawMode.newInstance());
+
+    terminalRawModeService.enableRawMode();
+
+    while (true) {
+
+      int read = System.in.read();
+      if (read == 'q') {
+        System.exit(0);
+      }
+    }
   }
 }

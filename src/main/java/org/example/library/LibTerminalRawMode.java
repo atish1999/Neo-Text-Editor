@@ -12,8 +12,9 @@ public interface LibTerminalRawMode extends Library {
   int SYSTEM_OUT_FD = 0;
   int ISIG = 1,
       ICANON = 2,
-      ECHO = 10,
+      ECHO = (1 << 3),
       TCSAFLUSH = 2,
+      TCSANOW = 0,
       IXON = 2000,
       ICRNL = 400,
       IEXTEN = 100000,
