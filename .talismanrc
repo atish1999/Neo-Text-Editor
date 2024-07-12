@@ -1,0 +1,6 @@
+fileignoreconfig:
+- filename: src/main/java/org/example/TextEditor.java
+  checksum: c32ec89771a9d7a54e9c1d57aa904c4daa39e0b31c01a01b289c74c9211c246d
+- filename: src/main/java/org/example/service/RawConsoleInput.java
+  checksum: 6621a9f0db17284063230ca2f4b4a042c27ba6e9590d02d19c13c0ab27bb0f43
+version: "1.0"
