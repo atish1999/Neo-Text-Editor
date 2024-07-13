@@ -1,6 +1,7 @@
 package org.example.service;
 
-import static org.example.library.LibTerminalRawMode.*;
+import static org.example.constant.GlobalConstants.TTY_FILE_DESCRIPTOR;
+import static org.example.constant.TermiosConstants.*;
 
 import java.io.IOException;
 import org.example.library.LibTerminalRawMode;
@@ -51,13 +52,13 @@ public class TerminalRawModeService {
 
     /*----------------getting the terminal state in the termios object-----------------------------*/
 
-    boolean isatty = libTerminalRawMode.isatty(SYSTEM_OUT_FD) == 1;
+    boolean isatty = libTerminalRawMode.isatty(TTY_FILE_DESCRIPTOR) == 1;
 
     if (!isatty) {
       System.out.println("StdIn is not a terminal device ....");
     }
 
-    libTerminalRawMode.tcgetattr(SYSTEM_OUT_FD, termios);
+    libTerminalRawMode.tcgetattr(TTY_FILE_DESCRIPTOR, termios);
 
     initialTermios = Termios.of(termios);
 
@@ -80,11 +81,11 @@ public class TerminalRawModeService {
     termios.c_cc[VTIME] = 1;
 
     /*----------------trying to set the terminal state-----------------------------*/
-    return libTerminalRawMode.tcsetattr(SYSTEM_OUT_FD, TCSAFLUSH, termios);
+    return libTerminalRawMode.tcsetattr(TTY_FILE_DESCRIPTOR, TCSAFLUSH, termios);
   }
 
   public void disableRawMode() {
-    int exitCode = libTerminalRawMode.tcsetattr(SYSTEM_OUT_FD, TCSANOW, initialTermios);
+    int exitCode = libTerminalRawMode.tcsetattr(TTY_FILE_DESCRIPTOR, TCSANOW, initialTermios);
 
     if (exitCode != 0) {
       throw new RuntimeException("Unable to disable terminal RAW mode");
