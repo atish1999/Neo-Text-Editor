@@ -3,8 +3,11 @@ package org.example.service;
 import static org.example.constant.GlobalConstants.TTY_FILE_DESCRIPTOR;
 import static org.example.constant.TermiosConstants.*;
 
+import java.io.IOException;
 import org.example.library.LibTerminalRawMode;
 import org.example.model.cnative.Termios;
+import sun.misc.Signal;
+import sun.misc.SignalHandler;
 
 public class TerminalRawModeService {
 
@@ -15,6 +18,34 @@ public class TerminalRawModeService {
   public TerminalRawModeService(final LibTerminalRawMode libTerminalRawMode) {
     this.libTerminalRawMode = libTerminalRawMode;
     this.termios = new Termios();
+  }
+
+  private void handleCtrlC() {
+    Signal.handle(
+        new Signal("INT"),
+        new SignalHandler() {
+          public void handle(Signal sig) {
+            disableRawMode();
+            System.exit(0);
+          }
+        });
+  }
+
+  private void handleCtrlZ() {
+    Signal.handle(
+        new Signal("TSTP"),
+        new SignalHandler() {
+          public void handle(Signal sig) {
+            disableRawMode();
+            try {
+              // Suspend the process
+              Runtime.getRuntime()
+                  .exec(new String[] {"sh", "-c", "kill -STOP " + ProcessHandle.current().pid()});
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          }
+        });
   }
 
   public void enableRawMode() {
