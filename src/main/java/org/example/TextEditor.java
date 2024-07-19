@@ -1,8 +1,8 @@
 package org.example;
 
 import java.io.IOException;
-import org.example.library.LibTerminalRawMode;
-import org.example.service.TerminalRawModeService;
+import org.example.library.LibCTerminal;
+import org.example.service.TerminalService;
 
 public class TextEditor {
 
@@ -11,15 +11,16 @@ public class TextEditor {
   }
 
   private static void init() throws IOException {
-    TerminalRawModeService terminalRawModeService =
-        new TerminalRawModeService(LibTerminalRawMode.newInstance());
+    TerminalService terminalService = new TerminalService(LibCTerminal.newInstance());
 
-    Runtime.getRuntime().addShutdownHook(new Thread(terminalRawModeService::disableRawMode));
+    Runtime.getRuntime().addShutdownHook(new Thread(terminalService::disableRawMode));
 
-    terminalRawModeService.enableRawMode();
+    terminalService.refreshScreen();
+    terminalService.enableRawMode();
 
     while (true) {
 
+      terminalService.refreshScreen();
       int read = System.in.read();
       System.out.println("key : " + (char) read + " -> " + read);
       if (read == 113) {

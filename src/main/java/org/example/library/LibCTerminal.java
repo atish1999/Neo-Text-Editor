@@ -5,13 +5,14 @@ import static org.example.constant.GlobalConstants.LIBRARY_NAME;
 import com.sun.jna.LastErrorException;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
+import com.sun.jna.NativeLong;
 import org.example.model.cnative.Termios;
 
-public interface LibTerminalRawMode extends Library {
+public interface LibCTerminal extends Library {
 
-  LibTerminalRawMode INSTANCE = Native.load(LIBRARY_NAME, LibTerminalRawMode.class);
+  LibCTerminal INSTANCE = Native.load(LIBRARY_NAME, LibCTerminal.class);
 
-  static LibTerminalRawMode newInstance() {
+  static LibCTerminal newInstance() {
     return INSTANCE;
   }
 
@@ -20,4 +21,6 @@ public interface LibTerminalRawMode extends Library {
   int tcsetattr(int fildes, int optional_actions, Termios termios_p) throws LastErrorException;
 
   int isatty(int fd);
+
+  int ioctl(int fd, NativeLong request, Object... args);
 }
